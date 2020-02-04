@@ -18,13 +18,14 @@ namespace MonoDroid.Generation {
 		ISymbol sym;
 		bool is_enumified;
 
-		internal Parameter (string name, string type, string managedType, bool isEnumified, string rawtype = null)
+		internal Parameter (string name, string type, string managedType, bool isEnumified, string rawtype = null, bool notNull = false)
 		{
 			this.name = name;
 			this.type = type;
 			this.rawtype = rawtype ?? type;
 			this.managed_type = managedType;
 			this.is_enumified = isEnumified;
+			NotNull = notNull;
 		}
 		
 		public string GetCall (CodeGenerationOptions opt)
@@ -96,6 +97,8 @@ namespace MonoDroid.Generation {
 			get { return name; }
 			set { name = value; }
 		}
+
+		public bool NotNull { get; set; }
 
 		public string PropertyName {
 			get {
@@ -213,7 +216,7 @@ namespace MonoDroid.Generation {
 			else if (NeedsPrep)
 				return sym.PreCallback (opt, Name, false);
 			else
-				return new string[] { opt.GetOutputName (Type) + " " + opt.GetSafeIdentifier (Name) + " = " + FromNative (opt, false) + ";" };
+				return new string[] { "var " + opt.GetSafeIdentifier (Name) + " = " + FromNative (opt, false) + ";" };
 		}
 
 		public string Type {
@@ -265,5 +268,7 @@ namespace MonoDroid.Generation {
 			}
 			return true;
 		}
+
+		public ISymbol Symbol => sym;
 	}
 }

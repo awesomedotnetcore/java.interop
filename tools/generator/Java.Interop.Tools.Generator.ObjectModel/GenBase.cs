@@ -353,6 +353,8 @@ namespace MonoDroid.Generation
 				var localFullName = Namespace + (Namespace.Length > 0 ? "." : string.Empty) + attrClassNameBase;
 
 				using (var sw = gen_info.OpenStream (opt.GetFileName (localFullName))) {
+					sw.WriteLine ("#nullable enable");
+					sw.WriteLine ();
 					sw.WriteLine ("using System;");
 					sw.WriteLine ();
 					sw.WriteLine ("namespace {0} {{", Namespace);
@@ -366,7 +368,7 @@ namespace MonoDroid.Generation
 					foreach (var method in Methods.Where (m => m.Parameters.Count == 0 &&
 									      IsTypeCommensurate (opt, opt.SymbolTable.Lookup (m.RetVal.JavaName)))) {
 						sw.WriteLine ("\t\t[global::Android.Runtime.Register (\"{0}\"{1})]", method.JavaName, method.AdditionalAttributeString ());
-						sw.WriteLine ("\t\tpublic {0} {1} {{ get; set; }}", opt.GetOutputName (method.RetVal.FullName), method.Name);
+						sw.WriteLine ("\t\tpublic {0} {1} {{ get; set; }}", opt.GetTypeReferenceName (method.RetVal), method.Name);
 						sw.WriteLine ();
 					}
 					sw.WriteLine ("\t}");
@@ -710,7 +712,7 @@ namespace MonoDroid.Generation
 
 			return new string []{
 				string.Format ("{0} {1} = {5}global::Java.Lang.Object.GetObject<{4}> ({2}, {3});",
-					       opt.GetOutputName (FullName),
+					       "var",
 					       opt.GetSafeIdentifier (var_name),
 					       opt.GetSafeIdentifier (TypeNameUtilities.GetNativeName (var_name)),
 					       owned ? "JniHandleOwnership.TransferLocalRef" : "JniHandleOwnership.DoNotTransfer",
