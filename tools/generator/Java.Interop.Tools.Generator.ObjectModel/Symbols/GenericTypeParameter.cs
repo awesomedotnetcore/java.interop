@@ -72,7 +72,7 @@ namespace MonoDroid.Generation {
 
 		public string FromNative (CodeGenerationOptions opt, string varname, bool owned)
 		{
-			return String.Format ("({0}) global::Java.Lang.Object.GetObject<{3}> ({1}, {2})", type, varname, owned ? "JniHandleOwnership.TransferLocalRef" : "JniHandleOwnership.DoNotTransfer", opt.GetOutputName (FullName));
+			return String.Format ("global::Java.Lang.Object.GetObject<{2}> ({0}, {1})", varname, owned ? "JniHandleOwnership.TransferLocalRef" : "JniHandleOwnership.DoNotTransfer", opt.GetOutputName (FullName));
 		}
 
 		public string GetGenericType (Dictionary<string, string> mappings)
@@ -98,7 +98,7 @@ namespace MonoDroid.Generation {
 		public string[] PreCallback (CodeGenerationOptions opt, string var_name, bool owned)
 		{
 			return new string[]{
-				string.Format ("{0} {1} = global::Java.Lang.Object.GetObject<{0}> ({2}, {3});",
+				string.Format ("var {1} = global::Java.Lang.Object.GetObject<{0}> ({2}, {3});",
 						opt.GetOutputName (FullName),
 						var_name,
 						opt.GetSafeIdentifier (TypeNameUtilities.GetNativeName (var_name)),

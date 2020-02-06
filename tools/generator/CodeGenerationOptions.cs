@@ -110,6 +110,14 @@ namespace MonoDroid.Generation
 			return string.Empty;
 		}
 
+		public string GetNullForgiveness (ReturnValue symbol)
+		{
+			if (symbol.NotNull || symbol.Symbol.IsEnum)
+				return NullForgivingOperator;
+
+			return string.Empty;
+		}
+
 		public string GetNullForgiveness (Parameter symbol)
 		{
 			if (symbol.NotNull || symbol.Symbol.IsEnum)
